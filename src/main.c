@@ -16,7 +16,6 @@ typedef struct {
 	int x;
 	int y;
 	SDL_Texture *texture_skin[8];
-	SDL_Texture *texture_gun[8];
 	SDL_Texture *texture_wall[2];
 } Entity;
 
@@ -124,7 +123,7 @@ SDL_Texture *loadTexture(char *filename, App game)
 	return texture;
 }
 
-void blit_walltd(SDL_Texture *texture, Entity player, App game, int height, int width)
+void blit_walltb(SDL_Texture *texture, Entity player, App game, int height, int width)
 {
 	SDL_Rect dest[2];
 	dest[0].x = 0;
@@ -179,13 +178,26 @@ void blit_player(SDL_Texture *texture, Entity player, App game, int d, int heigh
 void blit_gun(SDL_Texture *texture, Entity player, App game, int d, int height, int width)
 {
 	SDL_Rect dest;
-
-	dest.x = player.x + width * 0.03;
-	dest.y = player.y + height * 0.035;
 	/* Up and down */ /* topleft & downright */
 	if (d == 0 || d == 1 || d == 4 || d == 7) {
 		dest.w = height * 0.026;
 		dest.h = width * 0.053;
+		if (d == 0) {
+			dest.x = player.x + (width * 0.022);
+			dest.y = player.y - (height * 0.020);
+		}
+		else if (d == 1) {
+			dest.x = player.x + 10;
+			dest.y = player.y - 15;
+		}
+		else if (d == 4) {
+			dest.x = player.x + 10;
+			dest.y = player.y - 15;
+		}
+		else if (d == 7) {
+			dest.x = player.x + 10;
+			dest.y = player.y - 15;
+		}
 	}
 	/*left and right */ /* topright & downleft */
 	if (d == 2 || d == 3 || d == 5 || d == 6) {
@@ -197,27 +209,22 @@ void blit_gun(SDL_Texture *texture, Entity player, App game, int d, int height, 
 }
 
 void get_texture(App game, Entity *player) {
-	player->texture_skin[0] = loadTexture("Sprite/Player/top.png", game); //0 -> Top
-	player->texture_skin[1] = loadTexture("Sprite/Player/down.png", game); //1 -> down
-	player->texture_skin[2] = loadTexture("Sprite/Player/left.png", game); //2 -> left
-	player->texture_skin[3] = loadTexture("Sprite/Player/right.png", game); //3 -> right
-	player->texture_skin[4] = loadTexture("Sprite/Player/topleft.png", game); //4 -> topleft
-	player->texture_skin[5] = loadTexture("Sprite/Player/topright.png", game); //5 -> topright
-	player->texture_skin[6] = loadTexture("Sprite/Player/dleft.png", game); //6 -> downleft
-	player->texture_skin[7] = loadTexture("Sprite/Player/dright.png", game); //7 -> downright
-	player->texture_gun[0] = loadTexture("Sprite/Gun/top.png", game); //0 -> top
-	player->texture_gun[1] = loadTexture("Sprite/Gun/down.png", game); //1 -> down
-	player->texture_gun[2] = loadTexture("Sprite/Gun/left.png", game); //2 -> left
-	player->texture_gun[3] = loadTexture("Sprite/Gun/right.png", game); //3 -> right
-
+	player->texture_skin[0] = loadTexture("Sprite/Player/Top.png", game); //0 -> Top
+	player->texture_skin[1] = loadTexture("Sprite/Player/Down.png", game); //1 -> down
+	player->texture_skin[2] = loadTexture("Sprite/Player/Left.png", game); //2 -> left
+	player->texture_skin[3] = loadTexture("Sprite/Player/Right.png", game); //3 -> right
+	player->texture_skin[4] = loadTexture("Sprite/Player/TopLeft.png", game); //4 -> topleft
+	player->texture_skin[5] = loadTexture("Sprite/Player/TopRight.png", game); //5 -> topright
+	player->texture_skin[6] = loadTexture("Sprite/Player/DownLeft.png", game); //6 -> downleft
+	player->texture_skin[7] = loadTexture("Sprite/Player/DownRight.png", game); //7 -> downright
 	player->texture_wall[0] = loadTexture("Sprite/wall.png", game); //8 -> wall top and bottom
 	player->texture_wall[1] = loadTexture("Sprite/wall2.png", game); //9 -> wall left and right
 }
 
 int main(int argc, char *argv[])
 {
-	int width = 640;
-	int height = 480;
+	int width = 1920;
+	int height = 1017;
 	App game;
 	Entity player;
 	memset(&game, 0, sizeof(App));
@@ -236,14 +243,15 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	game.window = SDL_CreateWindow("ShooterGame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_RESIZABLE);
+	game.window = SDL_CreateWindow("ShooterGame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
 
 	if (!game.window)
 	{
 		printf("Failed to open %d x %d window: %s\n", width, height, SDL_GetError());
 		exit(1);
 	}
-
+	printf("width = %d\n", width);
+	printf("height = %d\n", height);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
 	game.renderer = SDL_CreateRenderer(game.window, -1, rendererFlags);
@@ -269,13 +277,13 @@ int main(int argc, char *argv[])
 			d = 6;
 		if (game.down && game.right)
 			d = 7;
-		if (game.up && player.y > (height * 0.036)) {
+		if (game.up && player.y > (height * 0.05)) {
 			if (game.left || game.right)
 				player.y -= (width / 350);
 			else
 				player.y -= (width / 200);
 		}
-		if (game.down && player.y < (height - (height * 0.125))) {
+		if (game.down && player.y < (height - (height * 0.18))) {
 			if (game.left || game.right)
 				player.y += (width / 350);
 			else
@@ -287,11 +295,9 @@ int main(int argc, char *argv[])
 			player.x += (width / 200);
 		if (game.quit == 1)
 			break;
-		blit_gun(player.texture_gun[d], player, game, d, height, width);
 		blit_player(player.texture_skin[d], player, game, d, height, width);
-		blit_walltd(player.texture_wall[0], player, game, height, width);
+		blit_walltb(player.texture_wall[0], player, game, height, width);
 		blit_walllr(player.texture_wall[1], player, game, height, width);
-
 		presentScene(game);
 		SDL_Delay(16);
 	}
