@@ -16,9 +16,10 @@ typedef struct {
 typedef struct {
 	int x;
 	int y;
-	SDL_Texture *texture_skin[8];
-	SDL_Texture *texture_bullet[8];
-	SDL_Texture *texture_wall[2];
+	int dx;
+	int dy;
+	int health;
+	SDL_Texture *texture[8];
 } Entity;
 
 void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity player, int *d)
@@ -129,7 +130,7 @@ SDL_Texture *loadTexture(char *filename, App game)
 	return texture;
 }
 
-void blit_walltb(SDL_Texture *texture, Entity player, App game, int height, int width)
+void blit_walltb(SDL_Texture *texture, App game, int height, int width)
 {
 	SDL_Rect dest[2];
 	dest[0].x = 0;
@@ -145,7 +146,7 @@ void blit_walltb(SDL_Texture *texture, Entity player, App game, int height, int 
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest[1]);
 }
 
-void blit_walllr(SDL_Texture *texture, Entity player, App game, int height, int width)
+void blit_walllr(SDL_Texture *texture, App game, int height, int width)
 {
 	SDL_Rect dest[2];
 	dest[0].x = 0;
@@ -181,12 +182,12 @@ void blit_player(SDL_Texture *texture, Entity player, App game, int d, int heigh
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
 }
 
-void blit_bullet(SDL_Texture *texture, Entity player, App game, int d, int height, int width)
+void blit_bullet(SDL_Texture *texture, Entity bullet, App game, int d, int height, int width)
 {
 	SDL_Rect dest;
 
-	dest.x = player.x + 47;
-	dest.y = player.y - 25;
+	dest.x = bullet.x + 47;
+	dest.y = bullet.y - 25;
 	if (d == 0 || d == 1) {
 		dest.w = height * 0.005;
 		dest.h = width * 0.008;
@@ -207,25 +208,25 @@ void blit_bullet(SDL_Texture *texture, Entity player, App game, int d, int heigh
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
 }
 
-void get_texture(App game, Entity *player) {
-	player->texture_skin[0] = loadTexture("Sprite/Player/Top.png", game); //0 -> Top
-	player->texture_skin[1] = loadTexture("Sprite/Player/Down.png", game); //1 -> down
-	player->texture_skin[2] = loadTexture("Sprite/Player/Left.png", game); //2 -> left
-	player->texture_skin[3] = loadTexture("Sprite/Player/Right.png", game); //3 -> right
-	player->texture_skin[4] = loadTexture("Sprite/Player/TopLeft.png", game); //4 -> topleft
-	player->texture_skin[5] = loadTexture("Sprite/Player/TopRight.png", game); //5 -> topright
-	player->texture_skin[6] = loadTexture("Sprite/Player/DownLeft.png", game); //6 -> downleft
-	player->texture_skin[7] = loadTexture("Sprite/Player/DownRight.png", game); //7 -> downright
-	player->texture_bullet[0] = loadTexture("Sprite/bullet/top.png", game); //bullet
-	player->texture_bullet[1] = loadTexture("Sprite/bullet/down.png", game); //bullet
-	player->texture_bullet[2] = loadTexture("Sprite/bullet/left.png", game); //bullet
-	player->texture_bullet[3] = loadTexture("Sprite/bullet/right.png", game); //bullet
-	player->texture_bullet[4] = loadTexture("Sprite/bullet/Topleft.png", game); //bullet
-	player->texture_bullet[5] = loadTexture("Sprite/bullet/Topright.png", game); //bullet
-	player->texture_bullet[6] = loadTexture("Sprite/bullet/Downleft.png", game); //bullet
-	player->texture_bullet[7] = loadTexture("Sprite/bullet/Downright.png", game); //bullet
-	player->texture_wall[0] = loadTexture("Sprite/wall.png", game); //8 -> wall top and bottom
-	player->texture_wall[1] = loadTexture("Sprite/wall2.png", game); //9 -> wall left and right
+void get_texture(App game, Entity *player, Entity *bullet, Entity *wall) {
+	player->texture[0] = loadTexture("Sprite/Player/Top.png", game); //0 -> Top
+	player->texture[1] = loadTexture("Sprite/Player/Down.png", game); //1 -> down
+	player->texture[2] = loadTexture("Sprite/Player/Left.png", game); //2 -> left
+	player->texture[3] = loadTexture("Sprite/Player/Right.png", game); //3 -> right
+	player->texture[4] = loadTexture("Sprite/Player/TopLeft.png", game); //4 -> topleft
+	player->texture[5] = loadTexture("Sprite/Player/TopRight.png", game); //5 -> topright
+	player->texture[6] = loadTexture("Sprite/Player/DownLeft.png", game); //6 -> downleft
+	player->texture[7] = loadTexture("Sprite/Player/DownRight.png", game); //7 -> downright
+	bullet->texture[0] = loadTexture("Sprite/bullet/top.png", game); //Top
+	bullet->texture[1] = loadTexture("Sprite/bullet/down.png", game); //down
+	bullet->texture[2] = loadTexture("Sprite/bullet/left.png", game); //left
+	bullet->texture[3] = loadTexture("Sprite/bullet/right.png", game); //right
+	bullet->texture[4] = loadTexture("Sprite/bullet/Topleft.png", game); //topleft
+	bullet->texture[5] = loadTexture("Sprite/bullet/Topright.png", game); //topright
+	bullet->texture[6] = loadTexture("Sprite/bullet/Downleft.png", game); //downleft
+	bullet->texture[7] = loadTexture("Sprite/bullet/Downright.png", game); //downright
+	wall->texture[0] = loadTexture("Sprite/wall.png", game); //8 -> wall top and bottom
+	wall->texture[1] = loadTexture("Sprite/wall2.png", game); //9 -> wall left and right
 }
 
 int main(int argc, char *argv[])
@@ -234,9 +235,13 @@ int main(int argc, char *argv[])
 	int height = 1017;
 	int d = 0;
 	Entity player;
+	Entity bullet;
+	Entity wall;
 	App game;
 	memset(&game, 0, sizeof(App));
 	memset(&player, 0, sizeof(Entity));
+	memset(&bullet, 0, sizeof(Entity));
+	memset(&wall, 0, sizeof(Entity));
 
 	IMG_Init(IMG_INIT_PNG);
 
@@ -266,7 +271,7 @@ int main(int argc, char *argv[])
 	}
 	player.x = (width / 2);
 	player.y = (height / 2);
-	get_texture(game, &player);
+	get_texture(game, &player, &bullet, &wall);
 	for (;;)
 	{
 		SDL_GetWindowSize(game.window, &width, &height);
@@ -296,13 +301,25 @@ int main(int argc, char *argv[])
 			player.x -= (width / 200);
 		if (game.right && player.x < (width - (width * 0.1)))
 			player.x += (width / 200);
-		if (game.shoot)
-			blit_bullet(player.texture_bullet[d], player, game, d, height, width);
+		if (game.shoot && bullet.health == 0) {
+			bullet.x = player.x;
+			bullet.y = player.y;
+			bullet.dx = 16;
+			bullet.dy = 0;
+			bullet.health = 1;
+			blit_bullet(bullet.texture[d], bullet, game, d, height, width);
+		}
+		bullet.x += bullet.dx;
+		bullet.y += bullet.dy;
+		if (bullet.x > width)
+			bullet.health = 0;
+		if (bullet.health > 0)
+			blit_bullet(bullet.texture[d], bullet, game, d, height, width);
 		if (game.quit == 1)
 			break;
-		blit_player(player.texture_skin[d], player, game, d, height, width);
-		blit_walltb(player.texture_wall[0], player, game, height, width);
-		blit_walllr(player.texture_wall[1], player, game, height, width);
+		blit_player(player.texture[d], player, game, d, height, width);
+		blit_walltb(wall.texture[0], game, height, width);
+		blit_walllr(wall.texture[1], game, height, width);
 		presentScene(game);
 		SDL_Delay(16);
 	}
