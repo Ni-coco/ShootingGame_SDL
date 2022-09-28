@@ -84,8 +84,38 @@ int main(int argc, char *argv[])
 		/* Shooting */
 		if (game.shoot && n <= 5 && !time) {
 			bullet[n].d = d;
-			bullet[n].x = player.x;
-			bullet[n].y = player.y;
+			if (d == 0) {
+				bullet[n].x = player.x + 48;
+				bullet[n].y = player.y;
+			}
+			else if (d == 1) {
+				bullet[n].x = player.x + 27;
+				bullet[n].y = player.y + 115;
+			}
+			else if (d == 2) {
+				bullet[n].x = player.x;
+				bullet[n].y = player.y + 25;
+			}
+			else if (d == 3) {
+				bullet[n].x = player.x + 115;
+				bullet[n].y = player.y + 48;
+			}
+			else if (d == 4) {
+				bullet[n].x = player.x;
+				bullet[n].y = player.y;
+			}
+			else if (d == 5) {
+				bullet[n].x = player.x + 120;
+				bullet[n].y = player.y;
+			}
+			else if (d == 6) {
+				bullet[n].x = player.x;
+				bullet[n].y = player.y + 68;
+			}
+			else if (d == 7) {
+				bullet[n].x = player.x + 68;
+				bullet[n].y = player.y + 120;
+			}
 			bullet[n].health = 1;
 			time = 15;
 			n++;
