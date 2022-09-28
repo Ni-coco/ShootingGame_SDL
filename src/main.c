@@ -9,9 +9,9 @@ int main(int argc, char *argv[])
 {
 	int width = 1920;
 	int height = 1017;
-	int d = 0, i = 0;
-	Entity player;
+	int d = 0, i = 0, n = 0, time = 0;
 	Entity bullet[6];
+	Entity player;
 	Entity wall;
 	App game;
 	memset(&game, 0, sizeof(App));
@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 	memset(&bullet, 0, sizeof(Entity));
 	memset(&wall, 0, sizeof(Entity));
 
+	/* Init window */
 	IMG_Init(IMG_INIT_PNG);
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -41,15 +42,20 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	/* Position player */
 	player.x = (width / 2);
 	player.y = (height / 2);
+
+	/* Load texture */
 	get_texture(game, &player, bullet, &wall);
 
 	for (;;)
 	{
 		SDL_GetWindowSize(game.window, &width, &height);
 		prepareScene(game);
-		doInput(&game, player, &d);
+
+		/* Direction && limit map */
+		doInput(&game, player, &d, n);
 		if (game.up && game.left)
 			d = 4;
 		if (game.up && game.right)
@@ -74,14 +80,22 @@ int main(int argc, char *argv[])
 			player.x -= (width / 200);
 		if (game.right && player.x < (width - (width * 0.1)))
 			player.x += (width / 200);
+
+		/* Shooting */
+		if (game.shoot && n <= 5 && !time) {
+			bullet[n].d = d;
+			bullet[n].x = player.x;
+			bullet[n].y = player.y;
+			bullet[n].health = 1;
+			time = 15;
+			n++;
+		}
+		if (time)
+			time--;
+
+		/* Bullet after shooting */
 		i = 0;
 		while (i < 6) {
-			if (game.shoot && bullet[i].health == 0) {
-			bullet[i].d = d;
-			bullet[i].x = player.x;
-			bullet[i].y = player.y;
-			bullet[i].health = 1;
-			}
 			if (bullet[i].d == 0)
 				bullet[i].y += -16;
 			if (bullet[i].d == 1)
@@ -112,8 +126,16 @@ int main(int argc, char *argv[])
 				blit_bullet(bullet[i].texture[bullet[i].d], bullet[i], game, d, height, width);
 			i++;
 		}
+
+		/* Reload */
+		if (game.reload && n == 6)
+			n = 0;
+
+		/* Quit */
 		if (game.quit == 1)
 			break;
+
+		/* Display player && wall */
 		blit_player(player.texture[d], player, game, d, height, width);
 		blit_walltb(wall.texture[0], game, height, width);
 		blit_walllr(wall.texture[1], game, height, width);

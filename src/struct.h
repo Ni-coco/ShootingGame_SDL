@@ -6,6 +6,7 @@ typedef struct {
 	int left;
 	int right;
 	int shoot;
+	int reload;
 	int quit;
 } App;
 

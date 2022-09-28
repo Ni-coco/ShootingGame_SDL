@@ -1,4 +1,4 @@
-void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity player, int *d)
+void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity player, int *d, int n)
 {
 	if (event->repeat == 0)
 	{
@@ -20,12 +20,13 @@ void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity player, int *d)
 		}
 		if (event->keysym.scancode == SDL_SCANCODE_SPACE)
 			game->shoot = 1;
+		if (event->keysym.scancode == SDL_SCANCODE_R)
+			game->reload = 1;
 		if (event->keysym.scancode == SDL_SCANCODE_I)
 		{
-			printf("%d", game->up);
 			printf("x = %d\n", player.x);
 			printf("y = %d\n", player.y);
-
+			printf("n = %d", n);
 		}
 	}
 }
@@ -46,10 +47,12 @@ void doKeyUp(SDL_KeyboardEvent *event, App *game)
 			game->shoot = 0;
 		if (event->keysym.scancode == SDL_SCANCODE_ESCAPE)
 			game->quit = 1;
+		if (event->keysym.scancode == SDL_SCANCODE_R)
+			game->reload = 0;
 	}
 }
 
-void doInput(App *game, Entity player, int *d)
+void doInput(App *game, Entity player, int *d, int n)
 {
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -60,7 +63,7 @@ void doInput(App *game, Entity player, int *d)
 				exit(0);
 				break;
 			case SDL_KEYDOWN:
-				doKeyDown(&event.key, game, player, d);
+				doKeyDown(&event.key, game, player, d, n);
 				break;
 			case SDL_KEYUP:
 				doKeyUp(&event.key, game);
