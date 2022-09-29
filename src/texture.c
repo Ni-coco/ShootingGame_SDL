@@ -9,7 +9,7 @@ SDL_Texture *loadTexture(char *filename, App game)
 	return texture;
 }
 
-void get_texture(App game, Entity *player, Entity *bullet, Entity *wall) {
+void get_texture(App game, Entity *player, Entity *bullet, Entity *ui) {
 	player->texture[0] = loadTexture("Sprite/Player/Top.png", game); //0 -> Top
 	player->texture[1] = loadTexture("Sprite/Player/Down.png", game); //1 -> down
 	player->texture[2] = loadTexture("Sprite/Player/Left.png", game); //2 -> left
@@ -28,6 +28,8 @@ void get_texture(App game, Entity *player, Entity *bullet, Entity *wall) {
 		bullet[i].texture[6] = loadTexture("Sprite/bullet/Downleft.png", game); //downleft
 		bullet[i].texture[7] = loadTexture("Sprite/bullet/Downright.png", game); //downright
 	}
-	wall->texture[0] = loadTexture("Sprite/wall.png", game); //8 -> wall top and bottom
-	wall->texture[1] = loadTexture("Sprite/wall2.png", game); //9 -> wall left and right
+	ui->texture[0] = loadTexture("Sprite/UI/wall.png", game); //0 -> wall top and bottom
+	ui->texture[1] = loadTexture("Sprite/UI/wall2.png", game); //1 -> wall left and right
+	ui->texture[2] = loadTexture("Sprite/UI/life.png", game); //2 -> life
+	ui->texture[3] = loadTexture("Sprite/UI/ammo.png", game); //3 -> ammo
 }

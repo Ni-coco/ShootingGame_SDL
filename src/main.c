@@ -12,12 +12,12 @@ int main(int argc, char *argv[])
 	int d = 0, i = 0, n = 0, time = 0;
 	Entity bullet[6];
 	Entity player;
-	Entity wall;
+	Entity ui;
 	App game;
 	memset(&game, 0, sizeof(App));
 	memset(&player, 0, sizeof(Entity));
 	memset(&bullet, 0, sizeof(Entity));
-	memset(&wall, 0, sizeof(Entity));
+	memset(&ui, 0, sizeof(Entity));
 
 	/* Init window */
 	IMG_Init(IMG_INIT_PNG);
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	player.y = (height / 2);
 
 	/* Load texture */
-	get_texture(game, &player, bullet, &wall);
+	get_texture(game, &player, bullet, &ui);
 
 	for (;;)
 	{
@@ -119,6 +119,8 @@ int main(int argc, char *argv[])
 			bullet[n].health = 1;
 			time = 15;
 			n++;
+			if (n == 6)
+				printf("-- Press 'R' to reload --\n");
 		}
 		if (time)
 			time--;
@@ -158,8 +160,10 @@ int main(int argc, char *argv[])
 		}
 
 		/* Reload */
-		if (game.reload && n == 6)
+		if (game.reload && n == 6) {
 			n = 0;
+			printf("...Reloading...\n");
+		}
 
 		/* Quit */
 		if (game.quit == 1)
@@ -167,8 +171,8 @@ int main(int argc, char *argv[])
 
 		/* Display player && wall */
 		blit_player(player.texture[d], player, game, d, height, width);
-		blit_walltb(wall.texture[0], game, height, width);
-		blit_walllr(wall.texture[1], game, height, width);
+		blit_walltb(ui.texture[0], game, height, width);
+		blit_walllr(ui.texture[1], game, height, width);
 		presentScene(game);
 		SDL_Delay(16);
 	}

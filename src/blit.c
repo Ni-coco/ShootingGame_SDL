@@ -75,3 +75,11 @@ void blit_bullet(SDL_Texture *texture, Entity bullet, App game, int d, int heigh
 	SDL_QueryTexture(texture, NULL, NULL, NULL, NULL);
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
 }
+
+void blit_ammo (SDL_Texture *texture, Entity ui, App game, int height, int width) {
+
+}
+
+void blit_life (SDL_Texture *texture, Entity ui, App game, int height, int width) {
+
+}
