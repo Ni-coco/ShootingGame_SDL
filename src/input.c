@@ -24,8 +24,8 @@ void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity player, int *d, int n
 			game->reload = 1;
 		if (event->keysym.scancode == SDL_SCANCODE_I)
 		{
-			printf("x = %d\n", player.x);
-			printf("y = %d\n", player.y);
+			printf("x = %d\n", player.px);
+			printf("y = %d\n", player.py);
 			printf("n = %d", n);
 		}
 	}
