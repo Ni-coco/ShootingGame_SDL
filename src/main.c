@@ -1,10 +1,10 @@
 #include "header.c"
 #include "struct.h"
-#include "input.c"
 #include "init&quit.c"
-#include "blit.c"
 #include "texture.c"
+#include "input.c"
 #include "player.c"
+#include "blit.c"
 #include "bullet.c"
 
 int main(int argc, char *argv[])
