@@ -1,30 +1,24 @@
-void blit_walltb(SDL_Texture *texture, App game, int height, int width)
+void blit_wall(SDL_Texture *texture, App game, int height, int width, int i)
 {
 	SDL_Rect dest[2];
 	dest[0].x = 0;
 	dest[0].y = 0;
-	dest[0].w = width;
-	dest[0].h = width * 0.025;
-	dest[1].x = 0;
-	dest[1].y = (height - ((width * 0.025) - 1));
-	dest[1].w = width;
-	dest[1].h = width * 0.025;
-	SDL_QueryTexture(texture, NULL, NULL, NULL, NULL);
-	SDL_RenderCopy(game.renderer, texture, NULL, &dest[0]);
-	SDL_RenderCopy(game.renderer, texture, NULL, &dest[1]);
-}
-
-void blit_walllr(SDL_Texture *texture, App game, int height, int width)
-{
-	SDL_Rect dest[2];
-	dest[0].x = 0;
-	dest[0].y = 0;
-	dest[0].w = width * 0.025;
-	dest[0].h = height;
-	dest[1].x = (width - (width * 0.025) + 1);
-	dest[1].y = 0;
-	dest[1].w = width * 0.025;
-	dest[1].h = height;
+	if (i == 0) {
+		dest[0].w = width;
+		dest[0].h = width * 0.025;
+		dest[1].x = 0;
+		dest[1].y = (height - ((width * 0.025) - 1));
+		dest[1].w = width;
+		dest[1].h = width * 0.025;
+	}
+	else if (i == 1) {
+		dest[0].w = width * 0.025;
+		dest[0].h = height;
+		dest[1].x = (width - (width * 0.025) + 1);
+		dest[1].y = 0;
+		dest[1].w = width * 0.025;
+		dest[1].h = height;
+	}
 	SDL_QueryTexture(texture, NULL, NULL, NULL, NULL);
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest[0]);
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest[1]);

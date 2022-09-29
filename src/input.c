@@ -1,4 +1,4 @@
-void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity player, int *d, int n)
+void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity player, int *d)
 {
 	if (event->repeat == 0)
 	{
@@ -26,7 +26,6 @@ void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity player, int *d, int n
 		{
 			printf("x = %d\n", player.px);
 			printf("y = %d\n", player.py);
-			printf("n = %d", n);
 		}
 	}
 }
@@ -52,7 +51,7 @@ void doKeyUp(SDL_KeyboardEvent *event, App *game)
 	}
 }
 
-void doInput(App *game, Entity player, int *d, int n)
+void doInput(App *game, Entity player, int *d)
 {
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -63,7 +62,7 @@ void doInput(App *game, Entity player, int *d, int n)
 				exit(0);
 				break;
 			case SDL_KEYDOWN:
-				doKeyDown(&event.key, game, player, d, n);
+				doKeyDown(&event.key, game, player, d);
 				break;
 			case SDL_KEYUP:
 				doKeyUp(&event.key, game);
