@@ -13,10 +13,12 @@ int main(int argc, char *argv[])
 	int height = 1017;
 	int d = 0, i = 0, n = 0, time = 0, life = 3, x = 0;
 	Entity player;
+	Entity enemies;
 	Stuff ui;
 	App game;
 	memset(&game, 0, sizeof(App));
 	memset(&player, 0, sizeof(Entity));
+	memset(&enemies, 0, sizeof(Entity));
 	memset(&ui, 0, sizeof(Stuff));
 
 	/* Init window */
@@ -45,7 +47,7 @@ int main(int argc, char *argv[])
 	player.py = (height / 2);
 
 	/* Load texture */
-	get_texture(game, &player, &ui);
+	get_texture(game, &player, &enemies, &ui);
 
 	for (;;)
 	{
