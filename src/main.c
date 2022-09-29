@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
 	int width = 1920;
 	int height = 1017;
-	int d = 0, i = 0, n = 0, time = 0;
+	int d = 0, i = 0, n = 0, time = 0, life = 3, x = 0;
 	Entity bullet[6];
 	Entity player;
 	Entity ui;
@@ -32,8 +32,6 @@ int main(int argc, char *argv[])
 		printf("Failed to open %d x %d window: %s\n", width, height, SDL_GetError());
 		exit(1);
 	}
-	printf("width = %d\n", width);
-	printf("height = %d\n", height);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	game.renderer = SDL_CreateRenderer(game.window, -1, SDL_RENDERER_ACCELERATED);
 	if (!game.renderer)
@@ -155,7 +153,7 @@ int main(int argc, char *argv[])
 			if (bullet[i].x > width || bullet[i].x < 0 || bullet[i].y > height || bullet[i].y < 0)
 				bullet[i].health = 0;
 			if (bullet[i].health > 0)
-				blit_bullet(bullet[i].texture[bullet[i].d], bullet[i], game, d, height, width);
+				blit_bullet(bullet[i].texture[bullet[i].d], bullet[i], game, height, width);
 			i++;
 		}
 
@@ -170,13 +168,19 @@ int main(int argc, char *argv[])
 			break;
 
 		/* Display player && wall */
-		blit_player(player.texture[d], player, game, d, height, width);
+		blit_player(player.texture[d], player, game, height, width, d);
+		x = 100;
+		for (int j = 0; j < life; j++)
+			blit_life(ui.texture[2], game, height, width, &x);
+		x = 1550;
+		for (int j = 5; j >= n; j--)
+			blit_ammo(ui.texture[3], game, height, width, &x);
 		blit_walltb(ui.texture[0], game, height, width);
 		blit_walllr(ui.texture[1], game, height, width);
 		presentScene(game);
 		SDL_Delay(16);
 	}
-
+	
     SDL_bye(game);
 	return 0;
 }

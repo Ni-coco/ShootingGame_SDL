@@ -30,7 +30,7 @@ void blit_walllr(SDL_Texture *texture, App game, int height, int width)
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest[1]);
 }
 
-void blit_player(SDL_Texture *texture, Entity player, App game, int d, int height, int width)
+void blit_player(SDL_Texture *texture, Entity player, App game, int height, int width, int d)
 {
 	SDL_Rect dest;
 
@@ -50,7 +50,7 @@ void blit_player(SDL_Texture *texture, Entity player, App game, int d, int heigh
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
 }
 
-void blit_bullet(SDL_Texture *texture, Entity bullet, App game, int d, int height, int width)
+void blit_bullet(SDL_Texture *texture, Entity bullet, App game, int height, int width)
 {
 	SDL_Rect dest;
 
@@ -76,10 +76,24 @@ void blit_bullet(SDL_Texture *texture, Entity bullet, App game, int d, int heigh
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
 }
 
-void blit_ammo (SDL_Texture *texture, Entity ui, App game, int height, int width) {
-
+void blit_life (SDL_Texture *texture, App game, int height, int width, int *x) {
+	SDL_Rect dest;
+	dest.x = *x;
+	dest.y = 75;
+	dest.w = width * 0.02;
+	dest.h = height * 0.04;
+	SDL_QueryTexture(texture, NULL, NULL, NULL, NULL);
+	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
+	*x += 50;
 }
 
-void blit_life (SDL_Texture *texture, Entity ui, App game, int height, int width) {
-
+void blit_ammo (SDL_Texture *texture, App game, int height, int width, int *x) {
+	SDL_Rect dest;
+	dest.x = *x;
+	dest.y = 75;
+	dest.w = width * 0.007;
+	dest.h = height * 0.04;
+	SDL_QueryTexture(texture, NULL, NULL, NULL, NULL);
+	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
+	*x += 50;
 }
