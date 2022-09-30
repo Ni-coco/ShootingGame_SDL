@@ -1,4 +1,3 @@
 ShootingGame with SDL library.
 
-https://user-images.githubusercontent.com/107803698/192849975-e133d37f-569f-43b5-9035-ad82d266002d.mp4
-
+Uploading ShooterGame 2022-09-30 22-25-59.mp4…
