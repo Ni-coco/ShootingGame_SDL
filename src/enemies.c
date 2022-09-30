@@ -1,23 +1,25 @@
 void move_enemies(Entity *enemies, int height, int width, int x)
 {
     for (int i = 0; i < 5; i++) {
-		if (enemies[i].px > width && x == 0) {
-			enemies[i].destx = rand() % (1820 - 15 + 1) + 15;
-			enemies[i].desty = rand() % (910 - 15 + 1) + 15;
-		}
-		else if (!(enemies[i].px < enemies[i].destx - 5 || enemies[i].px > enemies[i].destx + 5))
-			enemies[i].destx = rand() % (1820 - 15 + 1) + 15;
-		else if (!(enemies[i].py < enemies[i].desty - 5 || enemies[i].py > enemies[i].desty + 5))
-			enemies[i].desty = rand() % (910 - 15 + 1) + 15;
-		else {
-			if (enemies[i].destx < enemies[i].px)
-				enemies[i].px -= (width / 500);
-			else if (enemies[i].destx > enemies[i].px)
-				enemies[i].px += (width / 500);
-			if (enemies[i].desty < enemies[i].py)
-				enemies[i].py -= (width / 500);
-			else if (enemies[i].desty > enemies[i].py)
-				enemies[i].py += (width / 500);
+		if (enemies[i].phealth == 1) {
+			if (enemies[i].px > width && x == 0) {
+				enemies[i].destx = rand() % (1820 - 15 + 1) + 15;
+				enemies[i].desty = rand() % (910 - 15 + 1) + 15;
+			}
+			else if (!(enemies[i].px < enemies[i].destx - 5 || enemies[i].px > enemies[i].destx + 5))
+				enemies[i].destx = rand() % (1820 - 15 + 1) + 15;
+			else if (!(enemies[i].py < enemies[i].desty - 5 || enemies[i].py > enemies[i].desty + 5))
+				enemies[i].desty = rand() % (910 - 15 + 1) + 15;
+			else {
+				if (enemies[i].destx < enemies[i].px)
+					enemies[i].px -= (width / 500);
+				else if (enemies[i].destx > enemies[i].px)
+					enemies[i].px += (width / 500);
+				if (enemies[i].desty < enemies[i].py)
+					enemies[i].py -= (width / 500);
+				else if (enemies[i].desty > enemies[i].py)
+					enemies[i].py += (width / 500);
+			}
 		}
 	}
 }
@@ -25,17 +27,19 @@ void move_enemies(Entity *enemies, int height, int width, int x)
 void get_way(Entity *enemies, Entity player)
 {
 	for (int i = 0; i < 5; i++) {
-		if (enemies[i].px > player.px) {
-			if (enemies[i].py > player.py)
-				enemies[i].dp = 4;
-			else if (enemies[i].py < player.py)
-				enemies[i].dp = 6;
-		}
-		else if (enemies[i].px < player.px) {
-			if (enemies[i].py > player.py)
-				enemies[i].dp = 5;
-			else if (enemies[i].py < player.py)
-				enemies[i].dp = 7;
+		if (enemies[i].phealth == 1) {
+			if (enemies[i].px > player.px) {
+				if (enemies[i].py > player.py)
+					enemies[i].dp = 4;
+				else if (enemies[i].py < player.py)
+					enemies[i].dp = 6;
+			}
+			else if (enemies[i].px < player.px) {
+				if (enemies[i].py > player.py)
+					enemies[i].dp = 5;
+				else if (enemies[i].py < player.py)
+					enemies[i].dp = 7;
+			}
 		}
 	}
 }
@@ -43,7 +47,7 @@ void get_way(Entity *enemies, Entity player)
 void shoot_enemies(Entity *enemies, int *time)
 {
 	int i = rand() % 5;
-	if (enemies[i].nb <= 5 && !time[1]) {
+	if (enemies[i].nb <= 5 && !time[1] && enemies[i].phealth == 1) {
 		enemies[i].db[enemies[i].nb] = enemies[i].dp;
 		if (enemies[i].dp == 4) {
 			enemies[i].bx[enemies[i].nb] = enemies[i].px;

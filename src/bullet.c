@@ -88,3 +88,23 @@ void reload (App game, Entity *player) {
 		printf("...Reloading...\n");
 	}
 }
+
+int get_distance (int x1, int y1, int x2, int y2)
+{
+	int x = x1 - x2;
+	int y = y1 - y2;
+	return (sqrt(x * x + y * y));
+}
+
+void check_hit (Entity *from, Entity *to)
+{
+	for (int i = 0; i < 6; i++) {
+		if (from->bhealth[i] == 1) {
+			int distance = get_distance(to->px, to->py, from->bx[i], from->by[i]);
+			if (distance < to->radius) {
+				from->bhealth[i] = 0;
+				to->phealth -= 1;
+			}
+		}
+	}
+}

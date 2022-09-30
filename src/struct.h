@@ -17,6 +17,7 @@ typedef struct {
 	int desty;
 	int dp;
 	int phealth;
+	int radius;
 	int bx[6];
 	int by[6];
 	int nb;

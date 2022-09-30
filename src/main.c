@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
 	player.nb = 0;
 	player.destx = 0;
 	player.phealth = 3;
+	player.radius = 50;
 	player.px = (width / 2);
 	player.py = (height / 2);
 
@@ -55,8 +56,13 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < 5; i++) {
 		enemies[i].nb = 0;
 		enemies[i].phealth = 1;
-		enemies[i].px = 1950;
+		enemies[i].radius = 50;
+		enemies[i].px = 1940;
 		enemies[i].py = rand() % 1017;
+		for (int j = 0; j < 6; j++) {
+			enemies[i].bx[j] = 9999;
+			enemies[i].by[j] = 9999;
+		}
 	}
 
 	/* Load texture */
@@ -79,6 +85,9 @@ int main(int argc, char *argv[])
 		bullet(&player, game, height, width);
 			/* Reload */
 		reload(game, &player);
+			/* Check_Hit */
+		for (int i = 0; i < 5; i++)
+			check_hit(&player, &enemies[i]);
 
 		/* Enenmies */
 			/* Direction && limit map */
@@ -89,19 +98,32 @@ int main(int argc, char *argv[])
 		shoot_enemies(enemies, time);
 			/* Bullet after shooting */
 		for (int i = 0; i < 5; i++)
-			bullet(&enemies[i], game, height, width);
+			if (enemies->phealth == 1)
+				bullet(&enemies[i], game, height, width);
 			/* Reload */
 		for (int i = 0; i < 5; i++)
-			reload(game, &enemies[i]);
+			if (enemies->phealth == 1)
+				reload(game, &enemies[i]);
+		/* Check_Hit */
+		for (int i = 0; i < 5; i++)
+			check_hit(&enemies[i], &player);
 
 		/* Quit */
-		if (game.quit == 1)
+		if (game.quit == 1 || check_life(player, enemies))
 			break;
+		/*printf("enemies 0 = %d\n", enemies[0].phealth);
+		printf("enemies 1 = %d\n", enemies[1].phealth);
+		printf("enemies 2 = %d\n", enemies[2].phealth);
+		printf("enemies 3 = %d\n", enemies[3].phealth);
+		printf("enemies 4 = %d\n", enemies[4].phealth);*/
+
+		
 
 		/* Display */
 		blit_player(player.texture_player[player.dp], player, game, height, width);
 		for (int i = 0; i < 5; i++)
-			blit_player(enemies[i].texture_player[enemies[i].dp], enemies[i], game, height, width);
+			if (enemies[i].phealth == 1)
+				blit_player(enemies[i].texture_player[enemies[i].dp], enemies[i], game, height, width);
 		for (int i = 0; i < 2; i++)
 			blit_wall(ui.texture[i], game, height, width, i);
 		x = 100;
