@@ -4,6 +4,7 @@
 #include "texture.c"
 #include "input.c"
 #include "player.c"
+#include "enemies.c"
 #include "blit.c"
 #include "bullet.c"
 
@@ -11,7 +12,7 @@ int main(int argc, char *argv[])
 {
 	int width = 1920;
 	int height = 1017;
-	int d = 0, i = 0, n = 0, time = 0, life = 3, x = 0;
+	int time[2] = {0, 25}, x = 0;
 	Entity player;
 	Entity enemies[5];
 	Stuff ui;
@@ -44,10 +45,19 @@ int main(int argc, char *argv[])
 	}
 	
 	/* Position player */
+	player.nb = 0;
+	player.destx = 0;
+	player.phealth = 3;
 	player.px = (width / 2);
 	player.py = (height / 2);
 
-	/* Position enemies */
+	/* Position enemies & life */
+	for (int i = 0; i < 5; i++) {
+		enemies[i].nb = 0;
+		enemies[i].phealth = 1;
+		enemies[i].px = 1950;
+		enemies[i].py = rand() % 1017;
+	}
 
 	/* Load texture */
 	get_texture(game, &player, enemies, &ui);
@@ -58,33 +68,47 @@ int main(int argc, char *argv[])
 		prepareScene(game);
 
 		/* Input */
-		doInput(&game, player, &d);
+		doInput(&game, &player);
 
-		/* Direction && limit map */
-		move_player(&player, &game, &d, height, width);
-		
-		/* Shooting */
-		shoot(&player, game, d, &n, &time);
+		/* Player */
+			/* Direction && limit map */
+		move_player(&player, &game, height, width);
+			/* Shooting */
+		shoot(&player, game, time);
+			/* Bullet after shooting */
+		bullet(&player, game, height, width);
+			/* Reload */
+		reload(game, &player);
 
-		/* Bullet after shooting */
-		bulletillw(&player, game, height, width, i);
-
-		/* Reload */
-		reload(game, &n);
+		/* Enenmies */
+			/* Direction && limit map */
+		move_enemies(enemies, height, width, x);
+			/* Aim to player */
+		get_way(enemies, player);
+			/* Shooting */
+		shoot_enemies(enemies, time);
+			/* Bullet after shooting */
+		for (int i = 0; i < 5; i++)
+			bullet(&enemies[i], game, height, width);
+			/* Reload */
+		for (int i = 0; i < 5; i++)
+			reload(game, &enemies[i]);
 
 		/* Quit */
 		if (game.quit == 1)
 			break;
 
-		/* Display player && wall */
-		blit_player(player.texture_player[d], player, game, height, width, d);
+		/* Display */
+		blit_player(player.texture_player[player.dp], player, game, height, width);
+		for (int i = 0; i < 5; i++)
+			blit_player(enemies[i].texture_player[enemies[i].dp], enemies[i], game, height, width);
 		for (int i = 0; i < 2; i++)
 			blit_wall(ui.texture[i], game, height, width, i);
 		x = 100;
-		for (int i = 0; i < life; i++)
+		for (int i = 0; i < player.phealth; i++)
 			blit_life(ui.texture[2], game, height, width, &x);
 		x = 1550;
-		for (int i = 5; i >= n; i--)
+		for (int i = 5; i >= player.nb; i--)
 			blit_ammo(ui.texture[3], game, height, width, &x);
 
 		presentScene(game);

@@ -1,13 +1,13 @@
-void move_player(Entity *player, App *game, int *d, int height, int width)
+void move_player(Entity *player, App *game, int height, int width)
 {
 	if (game->up && game->left)
-		*d = 4;
+		player->dp = 4;
 	if (game->up && game->right)
-		*d = 5;
+		player->dp = 5;
 	if (game->down && game->left)
-		*d = 6;
+		player->dp = 6;
 	if (game->down && game->right)
-		*d = 7;
+		player->dp = 7;
 	if (game->up && player->py > (height * 0.05)) {
 		if (game->left || game->right)
 			player->py -= (width / 350);

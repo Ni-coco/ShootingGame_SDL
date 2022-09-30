@@ -13,10 +13,14 @@ typedef struct {
 typedef struct {
 	int px;
 	int py;
+	int destx;
+	int desty;
+	int dp;
 	int phealth;
 	int bx[6];
 	int by[6];
-	int d[6];
+	int nb;
+	int db[6];
 	int bhealth[6];
 	SDL_Texture *texture_player[8];
 	SDL_Texture *texture_bullet[8];

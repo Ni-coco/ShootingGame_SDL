@@ -7,6 +7,7 @@ SDL_Texture *loadTexture(char *filename, App game)
 }
 
 void get_texture(App game, Entity *player, Entity *enemies, Stuff *ui) {
+	
 	/* Player */
 	player->texture_player[0] = loadTexture("Sprite/Player/Top.png", game); //0 -> Top
 	player->texture_player[1] = loadTexture("Sprite/Player/Down.png", game); //1 -> down
@@ -28,18 +29,10 @@ void get_texture(App game, Entity *player, Entity *enemies, Stuff *ui) {
 	/* Enemies */
 	for (int i = 0; i < 5; i++)
 	{
-		enemies[i].texture_player[0] = loadTexture("Sprite/enemies/Top.png", game); //0 -> Top
-		enemies[i].texture_player[1] = loadTexture("Sprite/enemies/Down.png", game); //1 -> down
-		enemies[i].texture_player[2] = loadTexture("Sprite/enemies/Left.png", game); //2 -> left
-		enemies[i].texture_player[3] = loadTexture("Sprite/enemies/Right.png", game); //3 -> right
 		enemies[i].texture_player[4] = loadTexture("Sprite/enemies/TopLeft.png", game); //4 -> topleft
 		enemies[i].texture_player[5] = loadTexture("Sprite/enemies/TopRight.png", game); //5 -> topright
 		enemies[i].texture_player[6] = loadTexture("Sprite/enemies/DownLeft.png", game); //6 -> downleft
 		enemies[i].texture_player[7] = loadTexture("Sprite/enemies/DownRight.png", game); //7 -> downright
-		enemies[i].texture_bullet[0] = loadTexture("Sprite/bullet/top.png", game); //Top
-		enemies[i].texture_bullet[1] = loadTexture("Sprite/bullet/down.png", game); //down
-		enemies[i].texture_bullet[2] = loadTexture("Sprite/bullet/left.png", game); //left
-		enemies[i].texture_bullet[3] = loadTexture("Sprite/bullet/right.png", game); //right
 		enemies[i].texture_bullet[4] = loadTexture("Sprite/bullet/Topleft.png", game); //topleft
 		enemies[i].texture_bullet[5] = loadTexture("Sprite/bullet/Topright.png", game); //topright
 		enemies[i].texture_bullet[6] = loadTexture("Sprite/bullet/Downleft.png", game); //downleft

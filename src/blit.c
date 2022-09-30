@@ -24,18 +24,18 @@ void blit_wall(SDL_Texture *texture, App game, int height, int width, int i)
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest[1]);
 }
 
-void blit_player(SDL_Texture *texture, Entity player, App game, int height, int width, int d)
+void blit_player(SDL_Texture *texture, Entity player, App game, int height, int width)
 {
 	SDL_Rect dest;
 	dest.x = player.px;
 	dest.y = player.py;
 	/* Up and down */ /* topleft & downright */
-	if (d == 0 || d == 1 || d == 4 || d == 7) {
+	if (player.dp == 0 || player.dp == 1 || player.dp == 4 || player.dp == 7) {
 		dest.w = height * 0.08;
 		dest.h = width * 0.07;
 	}
 	/*left and right */ /* topright & downleft */
-	if (d == 2 || d == 3 || d == 5 || d == 6) {
+	if (player.dp == 2 || player.dp == 3 || player.dp == 5 || player.dp == 6) {
 		dest.w = width * 0.07;
 		dest.h = height * 0.08;
 	}
@@ -49,19 +49,19 @@ void blit_bullet(SDL_Texture *texture, Entity player, App game, int height, int 
 
 	dest.x = player.bx[i];
 	dest.y = player.by[i];
-	if (player.d[i] == 0 || player.d[i] == 1) {
+	if (player.db[i] == 0 || player.db[i] == 1) {
 		dest.w = height * 0.005;
 		dest.h = width * 0.008;
 	}
-	if (player.d[i] == 2 || player.d[i] == 3) {
+	if (player.db[i] == 2 || player.db[i] == 3) {
 		dest.w = width * 0.008;
 		dest.h = height * 0.005;
 	}
-	if (player.d[i] == 4 || player.d[i] == 7) {
+	if (player.db[i] == 4 || player.db[i] == 7) {
 		dest.w = width * 0.007;
 		dest.h = height * 0.0125;
 	}
-	if (player.d[i] == 5 || player.d[i] == 6) {
+	if (player.db[i] == 5 || player.db[i] == 6) {
 		dest.w = height * 0.0125;
 		dest.h = width * 0.007;
 	}
@@ -77,7 +77,7 @@ void blit_life (SDL_Texture *texture, App game, int height, int width, int *x) {
 	dest.h = height * 0.04;
 	SDL_QueryTexture(texture, NULL, NULL, NULL, NULL);
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
-	*x += 50;
+	*x += 65;
 }
 
 void blit_ammo (SDL_Texture *texture, App game, int height, int width, int *x) {
