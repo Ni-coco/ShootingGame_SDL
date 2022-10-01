@@ -21,6 +21,10 @@ void move_enemies(Entity *enemies, int height, int width, int x)
 					enemies[i].py += (width / 500);
 			}
 		}
+		else if (enemies[i].phealth == 0) {
+			enemies[i].px = -999;
+			enemies[i].py = -999;
+		}
 	}
 }
 

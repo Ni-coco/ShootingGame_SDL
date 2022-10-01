@@ -98,15 +98,16 @@ int main(int argc, char *argv[])
 		shoot_enemies(enemies, time);
 			/* Bullet after shooting */
 		for (int i = 0; i < 5; i++)
-			if (enemies->phealth == 1)
+			if (enemies[i].phealth == 1)
 				bullet(&enemies[i], game, height, width);
 			/* Reload */
 		for (int i = 0; i < 5; i++)
-			if (enemies->phealth == 1)
+			if (enemies[i].phealth == 1)
 				reload(game, &enemies[i]);
 		/* Check_Hit */
 		for (int i = 0; i < 5; i++)
-			check_hit(&enemies[i], &player);
+			if (enemies[i].phealth == 1)
+				check_hit(&enemies[i], &player);
 
 		/* Quit */
 		if (game.quit == 1 || check_life(player, enemies))
