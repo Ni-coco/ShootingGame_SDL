@@ -1,50 +1,16 @@
-#include "header.c"
-#include "struct.h"
-#include "init&quit.c"
-#include "texture.c"
-#include "input.c"
-#include "player.c"
-#include "enemies.c"
-#include "blit.c"
-#include "bullet.c"
-
-int main(int argc, char *argv[])
+void init_stage(App game, int width, int height)
 {
-	int width = 1920;
-	int height = 1017;
 	int time[2] = {0, 25}, x = 0;
 	Entity player;
 	Entity enemies[5];
 	Stuff ui;
-	App game;
 	memset(&game, 0, sizeof(App));
 	memset(&player, 0, sizeof(Entity));
 	memset(&enemies, 0, sizeof(Entity));
 	memset(&ui, 0, sizeof(Stuff));
 	
 
-	/* Init window */
-	IMG_Init(IMG_INIT_PNG);
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		printf("Couldn't initialize SDL: %s\n", SDL_GetError());
-		exit(1);
-	}
-	game.window = SDL_CreateWindow("ShooterGame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
-	if (!game.window)
-	{
-		printf("Failed to open %d x %d window: %s\n", width, height, SDL_GetError());
-		exit(1);
-	}
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-	game.renderer = SDL_CreateRenderer(game.window, -1, SDL_RENDERER_ACCELERATED);
-	if (!game.renderer)
-	{
-		printf("Failed to create renderer: %s\n", SDL_GetError());
-		exit(1);
-	}
-	
-	/* Position player */
+    	/* Position player */
 	player.nb = 0;
 	player.destx = 0;
 	player.phealth = 3;
@@ -64,11 +30,10 @@ int main(int argc, char *argv[])
 			enemies[i].by[j] = 9999;
 		}
 	}
-
-	/* Load texture */
+    	/* Load texture */
 	get_texture(game, &player, enemies, &ui);
-	
-	for (;;)
+
+    for (;;)
 	{
 		SDL_GetWindowSize(game.window, &width, &height);
 		prepareScene(game);
@@ -130,7 +95,4 @@ int main(int argc, char *argv[])
 		presentScene(game);
 		SDL_Delay(16);
 	}
-
-    SDL_bye(game);
-	return 0;
 }

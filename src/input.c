@@ -22,11 +22,6 @@ void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity *player)
 			game->shoot = 1;
 		if (event->keysym.scancode == SDL_SCANCODE_R)
 			game->reload = 1;
-		if (event->keysym.scancode == SDL_SCANCODE_I)
-		{
-			printf("x = %d\n", player->px);
-			printf("y = %d\n", player->py);
-		}
 	}
 }
 
