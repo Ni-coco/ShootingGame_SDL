@@ -44,4 +44,5 @@ void get_texture(App game, Entity *player, Entity *enemies, Stuff *ui) {
 	ui->texture[1] = loadTexture("Sprite/UI/wall2.png", game); //1 -> wall left and right
 	ui->texture[2] = loadTexture("Sprite/UI/life.png", game); //2 -> life
 	ui->texture[3] = loadTexture("Sprite/UI/ammo.png", game); //3 -> ammo
+	ui->texture[4] = loadTexture("Sprite/UI/PressEnter.png", game); //Press Enter to start
 }

@@ -96,12 +96,18 @@ int get_distance (int x1, int y1, int x2, int y2)
 	return (sqrt(x * x + y * y));
 }
 
-void check_hit (Entity *from, Entity *to)
+void check_hit (Entity *from, Entity *to, int *scoring)
 {
 	for (int i = 0; i < 6; i++) {
 		if (from->bhealth[i] == 1) {
 			int distance = get_distance(to->px, to->py, from->bx[i], from->by[i]);
-			if (distance < to->radius) {
+			if (distance < to->radius && to->destx != 0) {
+				from->bhealth[i] = 0;
+				to->px = 1940;
+				to->py = rand() % 1017;
+				*scoring += 1;
+			}
+			else if (distance < to->radius) {
 				from->bhealth[i] = 0;
 				to->phealth -= 1;
 			}

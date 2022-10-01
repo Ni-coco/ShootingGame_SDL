@@ -8,6 +8,7 @@ typedef struct {
 	int shoot;
 	int reload;
 	int quit;
+	int go;
 } App;
 
 typedef struct {
@@ -30,5 +31,5 @@ typedef struct {
 typedef struct {
 	int x;
 	int y;
-	SDL_Texture *texture[4];
+	SDL_Texture *texture[5];
 } Stuff;

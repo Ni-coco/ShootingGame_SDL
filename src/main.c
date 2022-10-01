@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
 	int width = 1920;
 	int height = 1017;
-	int time[2] = {0, 25}, x = 0;
+	int time[2] = {0, 25}, x = 0, scoring = 0;
 	Entity player;
 	Entity enemies[5];
 	Stuff ui;
@@ -49,8 +49,8 @@ int main(int argc, char *argv[])
 	player.destx = 0;
 	player.phealth = 3;
 	player.radius = 50;
-	player.px = (width / 2);
-	player.py = (height / 2);
+	player.px = (width - player.radius) / 2;
+	player.py = (height - player.radius) / 2;
 
 	/* Position enemies & life */
 	for (int i = 0; i < 5; i++) {
@@ -67,6 +67,19 @@ int main(int argc, char *argv[])
 
 	/* Load texture */
 	get_texture(game, &player, enemies, &ui);
+	doInput(&game, &player);
+
+	while (game.go == 0) {
+		prepareScene(game);
+		doInput(&game, &player);
+		for (int i = 0; i < 2; i++)
+			blit_wall(ui.texture[i], game, height, width, i);
+		blit_player(player.texture_player[player.dp], player, game, height, width);
+		blit_enter(ui.texture[4], game, height, width);
+		presentScene(game);
+		if (game.quit == 1)
+			break;		
+	} 
 	
 	for (;;)
 	{
@@ -87,7 +100,7 @@ int main(int argc, char *argv[])
 		reload(game, &player);
 			/* Check_Hit */
 		for (int i = 0; i < 5; i++)
-			check_hit(&player, &enemies[i]);
+			check_hit(&player, &enemies[i], &scoring);
 
 		/* Enenmies */
 			/* Direction && limit map */
@@ -98,16 +111,13 @@ int main(int argc, char *argv[])
 		shoot_enemies(enemies, time);
 			/* Bullet after shooting */
 		for (int i = 0; i < 5; i++)
-			if (enemies[i].phealth == 1)
-				bullet(&enemies[i], game, height, width);
+			bullet(&enemies[i], game, height, width);
 			/* Reload */
 		for (int i = 0; i < 5; i++)
-			if (enemies[i].phealth == 1)
-				reload(game, &enemies[i]);
+			reload(game, &enemies[i]);
 		/* Check_Hit */
 		for (int i = 0; i < 5; i++)
-			if (enemies[i].phealth == 1)
-				check_hit(&enemies[i], &player);
+			check_hit(&enemies[i], &player, &scoring);
 
 		/* Quit */
 		if (game.quit == 1 || check_life(player, enemies))
@@ -116,8 +126,7 @@ int main(int argc, char *argv[])
 		/* Display */
 		blit_player(player.texture_player[player.dp], player, game, height, width);
 		for (int i = 0; i < 5; i++)
-			if (enemies[i].phealth == 1)
-				blit_player(enemies[i].texture_player[enemies[i].dp], enemies[i], game, height, width);
+			blit_player(enemies[i].texture_player[enemies[i].dp], enemies[i], game, height, width);
 		for (int i = 0; i < 2; i++)
 			blit_wall(ui.texture[i], game, height, width, i);
 		x = 100;
@@ -130,7 +139,7 @@ int main(int argc, char *argv[])
 		presentScene(game);
 		SDL_Delay(16);
 	}
-
+	printf("You kill %d enemies!", scoring);
     SDL_bye(game);
 	return 0;
 }

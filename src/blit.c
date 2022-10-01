@@ -90,3 +90,11 @@ void blit_ammo (SDL_Texture *texture, App game, int height, int width, int *x) {
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
 	*x += 50;
 }
+
+void blit_enter (SDL_Texture *texture, App game, int height, int width) {
+	SDL_Rect dest;
+	dest.x = (width - dest.w * 10) / 2;
+	dest.y = (height - dest.h * 5) / 2;
+	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
+}
