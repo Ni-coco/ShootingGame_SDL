@@ -91,10 +91,41 @@ void blit_ammo (SDL_Texture *texture, App game, int height, int width, int *x) {
 	*x += 50;
 }
 
-void blit_enter (SDL_Texture *texture, App game, int height, int width) {
+void blit_play (SDL_Texture *texture, App game, int height, int width) {
 	SDL_Rect dest;
 	dest.x = (width - dest.w * 10) / 2;
 	dest.y = (height - dest.h * 5) / 2;
 	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
 	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
+}
+
+void blit_pause (SDL_Texture *texture, App game, int height, int width) {
+	SDL_Rect dest;
+	dest.x = (width - 500) / 2;
+	dest.y = (height - 500) / 2;
+	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
+}
+
+void blit_menu(SDL_Texture *texture, App game, int width, int height, int x) {
+	SDL_Rect dest;
+	dest.x = (width - x) / 2;
+	dest.y = (height - 100) / 2;
+	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+	SDL_RenderCopy(game.renderer, texture, NULL, &dest);
+}
+
+void display_all (Entity *player, Entity *enemies, Stuff *ui, App game, int width, int height, int *x)
+{
+		blit_player(player->texture_player[player->dp], *player, game, height, width);
+		for (int i = 0; i < 5; i++)
+			blit_player(enemies[i].texture_player[enemies[i].dp], enemies[i], game, height, width);
+		for (int i = 0; i < 2; i++)
+			blit_wall(ui->texture[i], game, height, width, i);
+		*x = 100;
+		for (int i = 0; i < player->phealth; i++)
+			blit_life(ui->texture[2], game, height, width, x);
+		*x = 1550;
+		for (int i = 5; i >= player->nb; i--)
+			blit_ammo(ui->texture[3], game, height, width, x);
 }

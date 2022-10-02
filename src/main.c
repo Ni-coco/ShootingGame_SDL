@@ -44,45 +44,26 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	
-	/* Position player */
-	player.nb = 0;
-	player.destx = 0;
-	player.phealth = 3;
-	player.radius = 50;
-	player.px = (width - player.radius) / 2;
-	player.py = (height - player.radius) / 2;
-
-	/* Position enemies & life */
-	for (int i = 0; i < 5; i++) {
-		enemies[i].nb = 0;
-		enemies[i].phealth = 1;
-		enemies[i].radius = 50;
-		enemies[i].px = 1940;
-		enemies[i].py = rand() % 1017;
-		for (int j = 0; j < 6; j++) {
-			enemies[i].bx[j] = 9999;
-			enemies[i].by[j] = 9999;
-		}
-	}
-
 	/* Load texture */
 	get_texture(game, &player, enemies, &ui);
-	doInput(&game, &player);
 
-	while (game.go == 0) {
-		prepareScene(game);
-		doInput(&game, &player);
-		for (int i = 0; i < 2; i++)
-			blit_wall(ui.texture[i], game, height, width, i);
-		blit_player(player.texture_player[player.dp], player, game, height, width);
-		blit_enter(ui.texture[4], game, height, width);
-		presentScene(game);
-		if (game.quit == 1)
-			break;		
-	} 
+	/* Reset all */
+	reset(&player, enemies, width, height);
 	
+
 	for (;;)
 	{
+		while (game.play == 0) {
+			prepareScene(game);
+			doInput(&game, &player);
+			for (int i = 0; i < 2; i++)
+				blit_wall(ui.texture[i], game, height, width, i);
+			blit_player(player.texture_player[player.dp], player, game, height, width);
+			blit_play(ui.texture[5], game, height, width);
+			presentScene(game);
+			if (game.quit == 1)
+				break;		
+		}
 		SDL_GetWindowSize(game.window, &width, &height);
 		prepareScene(game);
 
@@ -117,29 +98,48 @@ int main(int argc, char *argv[])
 			reload(game, &enemies[i]);
 		/* Check_Hit */
 		for (int i = 0; i < 5; i++)
-			check_hit(&enemies[i], &player, &scoring);
-
-		/* Quit */
-		if (game.quit == 1 || check_life(player, enemies))
-			break;		
+			check_hit(&enemies[i], &player, &scoring);	
 
 		/* Display */
-		blit_player(player.texture_player[player.dp], player, game, height, width);
-		for (int i = 0; i < 5; i++)
-			blit_player(enemies[i].texture_player[enemies[i].dp], enemies[i], game, height, width);
-		for (int i = 0; i < 2; i++)
-			blit_wall(ui.texture[i], game, height, width, i);
-		x = 100;
-		for (int i = 0; i < player.phealth; i++)
-			blit_life(ui.texture[2], game, height, width, &x);
-		x = 1550;
-		for (int i = 5; i >= player.nb; i--)
-			blit_ammo(ui.texture[3], game, height, width, &x);
+		display_all(&player, enemies, &ui, game, width, height, &x);
 
 		presentScene(game);
 		SDL_Delay(16);
+		//printf("%d\n", game.play);
+
+		/* Pause */
+		while (game.pause == 1) {
+			doInput(&game, &player);
+			prepareScene(game);
+			display_all(&player, enemies, &ui, game, width, height, &x);
+			blit_pause(ui.texture[8], game, height, width);
+			presentScene(game);
+		}
+
+		/* Quit */
+		while (check_life(player, enemies)) {
+			game.play = 0;
+			doInput(&game, &player);
+			prepareScene(game);
+			blit_pause(ui.texture[4], game, height, width);
+			x = 1800;
+			for (int i = 6; i < 8; i++) {
+				blit_menu(ui.texture[i], game, width, height, x);
+				x = -100;
+			}
+			presentScene(game);
+			if (game.play == 1) {
+				reset(&player, enemies, width, height);
+				game.play = 0;
+				break;
+			}
+			if (game.pause == 1)
+				break;
+		}
+		if (game.pause == 1 && check_life(player, enemies))
+			break;
 	}
-	printf("You kill %d enemies!", scoring);
+	printf("You kill %d enemies in total!", scoring);
     SDL_bye(game);
 	return 0;
-}
+} 

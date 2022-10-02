@@ -2,7 +2,7 @@ void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity *player)
 {
 	if (event->repeat == 0)
 	{
-		if (game->go == 1) {
+		if (game->play == 1) {
 			if (event->keysym.scancode == SDL_SCANCODE_UP) {
 				game->up = 1;
 				player->dp = 0;
@@ -25,7 +25,13 @@ void doKeyDown(SDL_KeyboardEvent *event, App *game, Entity *player)
 				game->reload = 1;
 		}
 		if (event->keysym.scancode == SDL_SCANCODE_RETURN)
-			game->go = 1;
+			game->play = 1;
+		if (event->keysym.scancode == SDL_SCANCODE_ESCAPE) {
+			if (game->pause == 0)
+				game->pause = 1;
+			else if (game->pause == 1)
+				game->pause = 0;
+		}
 	}
 }
 
@@ -43,8 +49,6 @@ void doKeyUp(SDL_KeyboardEvent *event, App *game)
 			game->right = 0;
 		if (event->keysym.scancode == SDL_SCANCODE_SPACE)
 			game->shoot = 0;
-		if (event->keysym.scancode == SDL_SCANCODE_ESCAPE)
-			game->quit = 1;
 		if (event->keysym.scancode == SDL_SCANCODE_R)
 			game->reload = 0;
 	}

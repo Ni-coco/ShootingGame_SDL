@@ -44,5 +44,9 @@ void get_texture(App game, Entity *player, Entity *enemies, Stuff *ui) {
 	ui->texture[1] = loadTexture("Sprite/UI/wall2.png", game); //1 -> wall left and right
 	ui->texture[2] = loadTexture("Sprite/UI/life.png", game); //2 -> life
 	ui->texture[3] = loadTexture("Sprite/UI/ammo.png", game); //3 -> ammo
-	ui->texture[4] = loadTexture("Sprite/UI/PressEnter.png", game); //Press Enter to start
+	ui->texture[4] = loadTexture("Sprite/UI/youdie.png", game); //You die
+	ui->texture[5] = loadTexture("Sprite/UI/toplay.png", game); //Press Enter to start
+	ui->texture[6] = loadTexture("Sprite/UI/toreplay.png", game); //Press Enter to replay
+	ui->texture[7] = loadTexture("Sprite/UI/toquit.png", game); //Press Echap to quit
+	ui->texture[8] = loadTexture("Sprite/UI/pause.png", game); //Pause
 }
