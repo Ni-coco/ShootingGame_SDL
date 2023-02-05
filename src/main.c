@@ -105,7 +105,6 @@ int main(int argc, char *argv[])
 
 		presentScene(game);
 		SDL_Delay(16);
-		//printf("%d\n", game.play);
 
 		/* Pause */
 		while (game.pause == 1) {
