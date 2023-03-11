@@ -5,7 +5,7 @@ The controls are :
 - 'R' to reload
 - 'ESC' to pause & quit
 
-(Note to myself) -> To compile this abomination, run "gcc .\src\main.c -o bin/prog -I include -L lib -lmingw32 -lsdl2main -lSDL2 -lSDL2_image".
+(Note to myself) -> To compile this, run "gcc .\src\main.c -o bin/prog -I include -L lib -lmingw32 -lsdl2main -lSDL2 -lSDL2_image".
 Don't forget to have all the .h in the include folder and also don't forget the .dll in the same folder as the .exe or .out.
 
 =======
